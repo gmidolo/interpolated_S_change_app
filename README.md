@@ -1,5 +1,7 @@
 This repository contains the **data** and **R code** to reproduce an R shiny app mapping species richness dynamics across Europe.
 
+**App link**: [https://gmidolo.shinyapps.io/interpolated_s_change_app](https://gmidolo.shinyapps.io/interpolated_s_change_app/)
+
 ![alt text](https://github.com/gmidolo/interpolated_S_change_app/blob/main/screenshot.app.png)
 
 **Description**:
