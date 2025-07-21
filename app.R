@@ -24,6 +24,7 @@ suppressPackageStartupMessages({
 # Load data
 dat <- read_rds('data.rds')
 
+
 #### 2. Define UI ####
 
 ui <- fluidPage(

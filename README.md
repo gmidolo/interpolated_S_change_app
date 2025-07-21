@@ -1,5 +1,7 @@
 This repository contains the **data** and **R code** to reproduce an R shiny app mapping species richness dynamics across Europe.
 
+![alt text](https://github.com/gmidolo/interpolated_S_change_app/blob/main/screenshot.app.png)
+
 **Description**:
 
 We interpolated spatiotemporal changes in vascular plant richness between 1960 and 2020 using Random Forests. Training and predictions are obtained over 660,748 European vegetation plots retreived from the <a href='https://euroveg.org/eva-database/' target='_blank'>European Vegetation Archive</a> (<a href='https://doi.org/10.1111/avsc.12519' target='_blank'>Chytrý et al. 2020</a>) and <a href='https://euroveg.org/resurvey/' target='_blank'>ReSurveyEurope</a> (<a href='https://doi.org/10.1111/jvs.13235' target='_blank'>Knollová et al. 2024</a>).
