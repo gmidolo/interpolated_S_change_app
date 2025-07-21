@@ -1,12 +1,14 @@
 This repository contains the **data** and **R code** to reproduce an R shiny app mapping species richness dynamics across Europe.
 
+**Description**:
+
 We interpolated spatiotemporal changes in vascular plant richness between 1960 and 2020 using Random Forests. Training and predictions are obtained over 660,748 European vegetation plots retreived from the <a href='https://euroveg.org/eva-database/' target='_blank'>European Vegetation Archive</a> (<a href='https://doi.org/10.1111/avsc.12519' target='_blank'>Chytrý et al. 2020</a>) and <a href='https://euroveg.org/resurvey/' target='_blank'>ReSurveyEurope</a> (<a href='https://doi.org/10.1111/jvs.13235' target='_blank'>Knollová et al. 2024</a>).
 
 Predictions of species richness from individual plots were aggregated onto a 10 km × 10 km grid. On the map, point size represents the number of plots within each grid cell. Areas with denser sampling in space and time are more likely to show more accurate trends.
 
-This application uses data and code deposited at:<br>
+This application uses original data and code deposited at:<br>
                  - <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="15" style="vertical-align: middle; margin-right: 3px;"/> <a href="https://github.com/gmidolo/interpolated_S_change" target="_blank">github.com/gmidolo/interpolated_S_change</a><br>
-                 - <img src="https://about.zenodo.org/static/img/icons/zenodo-icon-blue.svg" width="15" style="vertical-align: middle; margin-right: 3px;"/> <a href="https://doi.org/10.5281/zenodo.15836616" target="_blank">10.5281/zenodo.15836616</a>
+                 - <img src="https://about.zenodo.org/static/img/icons/zenodo-icon-white.svg" width="15" style="vertical-align: middle; margin-right: 3px;"/> <a href="https://doi.org/10.5281/zenodo.15836616" target="_blank">10.5281/zenodo.15836616</a>
 
 #### Authors:
 **Gabriele Midolo** <a href="https://orcid.org/0000-0003-1316-2546" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/0/06/ORCID_iD.svg" class="is-rounded" width="15"/></a>,
