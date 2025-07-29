@@ -116,8 +116,8 @@ ui <- fluidPage(
 
 #### 3. Define server ####
 
+
 server <- function(input, output, session) {
-  
   output$plot_size_note <- renderText({
     req(input$habitat)
     
@@ -162,33 +162,55 @@ server <- function(input, output, session) {
     y2 <- paste0("S_pred_", input$years[2])
     
     dat_hab <- dat_hab %>%
-      mutate(change_value = case_when(
-        input$metric == "perc"  ~ 100 * ((.data[[y2]] - .data[[y1]]) / .data[[y1]]),
-        input$metric == "lnrr"  ~ log(.data[[y2]] / .data[[y1]]),
-        input$metric == "diff"  ~ .data[[y2]] - .data[[y1]]
-      ))
+      mutate(
+        change_value = case_when(
+          input$metric == "perc"  ~ 100 * ((.data[[y2]] - .data[[y1]]) / .data[[y1]]),
+          input$metric == "lnrr"  ~ log(.data[[y2]] / .data[[y1]]),
+          input$metric == "diff"  ~ .data[[y2]] - .data[[y1]]
+        )
+      )
     
     dat_hab <- dat_hab %>%
-      mutate(change_cat = case_when(
-        input$metric == "perc" ~ cut(change_value,
-                                     breaks = c(-Inf, -50, -25, -10, -5, 5, 10, 25, 50, Inf),
-                                     labels = c('< -50%', '-50% – -25%', '-25% – -10%', '-10% – -5%',
-                                                '-5% – 5%', '5% – 10%', '10% – 25%', '25% – 50%', '> 50%'),
-                                     include.lowest = TRUE
-        ),
-        input$metric == "lnrr" ~ cut(change_value,
-                                     breaks = c(-10, -0.5, -0.1, -0.05, 0.05, 0.1, 0.5, 10),
-                                     labels = c('< -0.5', '-0.5 – -0.1', '-0.1 – -0.05', '-0.05 – 0.05',
-                                                '0.05 – 0.1', '0.1 – 0.5', '> 0.5'),
-                                     include.lowest = TRUE
-        ),
-        input$metric == "diff" ~ cut(change_value,
-                                     breaks = c(-Inf, -10, -5, -1, 1, 5, 10, Inf),
-                                     labels = c('< -10', '-10 – -5', '-5 – -1', '-1 – 1',
-                                                '1 – 5', '5 – 10', '> 10'),
-                                     include.lowest = TRUE
+      mutate(
+        change_cat = case_when(
+          input$metric == "perc" ~ cut(
+            change_value,
+            breaks = c(-Inf, -50, -25, -10, -5, 5, 10, 25, 50, Inf),
+            labels = c(
+              '< -50%',
+              '-50% – -25%',
+              '-25% – -10%',
+              '-10% – -5%',
+              '-5% – 5%',
+              '5% – 10%',
+              '10% – 25%',
+              '25% – 50%',
+              '> 50%'
+            ),
+            include.lowest = TRUE
+          ),
+          input$metric == "lnrr" ~ cut(
+            change_value,
+            breaks = c(-10, -0.5, -0.1, -0.05, 0.05, 0.1, 0.5, 10),
+            labels = c(
+              '< -0.5',
+              '-0.5 – -0.1',
+              '-0.1 – -0.05',
+              '-0.05 – 0.05',
+              '0.05 – 0.1',
+              '0.1 – 0.5',
+              '> 0.5'
+            ),
+            include.lowest = TRUE
+          ),
+          input$metric == "diff" ~ cut(
+            change_value,
+            breaks = c(-Inf, -10, -5, -1, 1, 5, 10, Inf),
+            labels = c('< -10', '-10 – -5', '-5 – -1', '-1 – 1', '1 – 5', '5 – 10', '> 10'),
+            include.lowest = TRUE
+          )
         )
-      ))
+      )
     
     dat_hab
   })
@@ -204,84 +226,137 @@ server <- function(input, output, session) {
   output$map <- renderLeaflet({
     leaflet() %>%
       addProviderTiles("Esri.WorldGrayCanvas") %>%
-      setView(lng = 15, lat = 57, zoom = 4)
+      setView(lng = 15,
+              lat = 57,
+              zoom = 4)
   })
   
   # Observe inputs for main map updates
   observe({
+    # Add input$habitat as a direct dependency here
+    input$habitat # This line makes the observe block reactive to habitat changes
+    
     leafletProxy("map") %>% clearControls() # Always clear controls to redraw legend
+    leafletProxy("map") %>% clearMarkers() # Clear markers when inputs change
     
     current_zoom <- input$map_zoom
-    if (is.null(current_zoom)) current_zoom <- 4 # default zoom
+    if (is.null(current_zoom))
+      current_zoom <- 4 # default zoom
     
     # Adjust point size by zooming level
     fac = 0.2
     zoomy = input$map_zoom
-    scale_factor = zoomy * fac # Current scaling factor
+    scale_factor = zoomy * fac # set current scaling factor
     
     if (input$mode == "Species richness change") {
       dat_plot <- change_data()
       
       if (input$metric == "perc") {
-        levels_lab <- c('< -50%', '-50% – -25%', '-25% – -10%', '-10% – -5%',
-                        '-5% – 5%', '5% – 10%', '10% – 25%', '25% – 50%', '> 50%')
+        levels_lab <- c(
+          '< -50%',
+          '-50% – -25%',
+          '-25% – -10%',
+          '-10% – -5%',
+          '-5% – 5%',
+          '5% – 10%',
+          '10% – 25%',
+          '25% – 50%',
+          '> 50%'
+        )
       } else if (input$metric == "lnrr") {
-        levels_lab <- c('< -0.5', '-0.5 – -0.1', '-0.1 – -0.05', '-0.05 – 0.05',
-                        '0.05 – 0.1', '0.1 – 0.5', '> 0.5')
+        levels_lab <- c(
+          '< -0.5',
+          '-0.5 – -0.1',
+          '-0.1 – -0.05',
+          '-0.05 – 0.05',
+          '0.05 – 0.1',
+          '0.1 – 0.5',
+          '> 0.5'
+        )
       } else {
-        levels_lab <- c('< -10', '-10 – -5', '-5 – -1', '-1 – 1',
-                        '1 – 5', '5 – 10', '> 10')
+        levels_lab <- c('< -10', '-10 – -5', '-5 – -1', '-1 – 1', '1 – 5', '5 – 10', '> 10')
       }
       
       cols <- hcl.colors(length(levels_lab), "Spectral")
       pal <- colorFactor(palette = cols, levels = levels_lab)
       
       leafletProxy("map") %>%
-        addCircleMarkers(data = dat_plot,
-                         layerId = ~paste0("point_", geometry_id), # Unique ID for each point
-                         radius = ~(log(n)+2) * scale_factor,
-                         color = ~pal(change_cat),
-                         stroke = FALSE,
-                         fillOpacity = 0.7,
-                         popup = ~paste0("Mean species richness change: ", round(change_value, 2),
-                                         "<br>No. plots: ", n)) %>%
-        addLegend("topright", pal = pal, values = dat_plot$change_cat,
-                  title = "Species richness change", opacity = 0.9)
+        addCircleMarkers(
+          data = dat_plot,
+          layerId = ~ paste0("point_", geometry_id),
+          # Unique ID for each point
+          radius = ~ (log(n) + 2) * scale_factor,
+          color = ~ pal(change_cat),
+          stroke = FALSE,
+          fillOpacity = 0.7,
+          popup = ~ paste0(
+            "Mean species richness change: ",
+            round(change_value, 2),
+            "<br>No. plots: ",
+            n
+          )
+        ) %>%
+        addLegend(
+          "topright",
+          pal = pal,
+          values = dat_plot$change_cat,
+          title = "Species richness change",
+          opacity = 0.9
+        )
       
-    } else { # input$mode == "Species richness per year"
+    } else {
+      # input$mode == "Species richness per year"
       dat_plot <- snapshot_data()
       
       dat_plot <- dat_plot %>%
-        mutate(original_S_value = 10^S_value) # Back-transform to original species richness
+        mutate(original_S_value = 10 ^ S_value) # back-transform species richness
       
       breaks_s_value <- c(1, 5, 10, 15, 20, 25, 30, 40, Inf)
-      levels_lab_snapshot <- c('1-5', '6-10', '11-15', '16-20', '21-25', '26-30', '31-40', '>40')
+      levels_lab_snapshot <- c('1-5',
+                               '6-10',
+                               '11-15',
+                               '16-20',
+                               '21-25',
+                               '26-30',
+                               '31-40',
+                               '>40')
       
       dat_plot <- dat_plot %>%
-        mutate(S_value_cat = cut(original_S_value,
-                                 breaks = breaks_s_value,
-                                 labels = levels_lab_snapshot,
-                                 include.lowest = TRUE,
-                                 right = TRUE
-        ))
+        mutate(
+          S_value_cat = cut(
+            original_S_value,
+            breaks = breaks_s_value,
+            labels = levels_lab_snapshot,
+            include.lowest = TRUE,
+            right = TRUE
+          )
+        )
       
       cols_snapshot <- viridis(length(levels_lab_snapshot), option = "plasma")
       pal_snapshot <- colorFactor(palette = cols_snapshot, levels = levels_lab_snapshot)
       
       leafletProxy("map") %>%
-        addCircleMarkers(data = dat_plot,
-                         layerId = ~paste0("point_", geometry_id),
-                         radius = ~(log(n)+2) * scale_factor,
-                         color = ~pal_snapshot(S_value_cat),
-                         stroke = FALSE,
-                         fillOpacity = 0.7,
-                         popup = ~paste0("Mean species richness: ", round(original_S_value, 2),
-                                         "<br>No. plots: ", n)) %>%
-        addLegend("topright",
-                  pal = pal_snapshot,
-                  values = dat_plot$S_value_cat,
-                  title = "Species richness",
-                  opacity = 0.9)
+        addCircleMarkers(
+          data = dat_plot,
+          layerId = ~ paste0("point_", geometry_id),
+          radius = ~ (log(n) + 2) * scale_factor,
+          color = ~ pal_snapshot(S_value_cat),
+          stroke = FALSE,
+          fillOpacity = 0.7,
+          popup = ~ paste0(
+            "Mean species richness: ",
+            round(original_S_value, 2),
+            "<br>No. plots: ",
+            n
+          )
+        ) %>%
+        addLegend(
+          "topright",
+          pal = pal_snapshot,
+          values = dat_plot$S_value_cat,
+          title = "Species richness",
+          opacity = 0.9
+        )
     }
   })
   
@@ -295,11 +370,6 @@ server <- function(input, output, session) {
     }
     prev_mode(input$mode)
   }, ignoreNULL = FALSE, ignoreInit = TRUE)
-  
-  # Clear markers if habitat changes
-  observeEvent(input$habitat, {
-    leafletProxy("map") %>% clearMarkers()
-  })
   
   
   # Observer for map marker clicks to show time series plot in popup
@@ -337,9 +407,10 @@ server <- function(input, output, session) {
       # gey the change value for display in popup
       y1_col <- paste0("S_pred_", input$years[1])
       y2_col <- paste0("S_pred_", input$years[2])
-  
+      
       # ensure columns exist before trying to access them
-      if (y1_col %in% names(point_data_for_plot) && y2_col %in% names(point_data_for_plot)) {
+      if (y1_col %in% names(point_data_for_plot) &&
+          y2_col %in% names(point_data_for_plot)) {
         s_pred_y1 <- point_data_for_plot[[y1_col]]
         s_pred_y2 <- point_data_for_plot[[y2_col]]
         
@@ -350,16 +421,31 @@ server <- function(input, output, session) {
           input$metric == "diff" ~ s_pred_y2 - s_pred_y1
         )
         lab_change <- ""
-        if(input$metric == "perc"){lab_change <- " (%)"}
-        if(input$metric == "lnrr"){lab_change <- " (lnRR)"}
-        if(input$metric == "diff"){lab_change <- " (no. species)"}
-        val_display <- ifelse(change_value > 0, paste0("+", round(change_value, 2)), round(change_value, 2))
-        richness_display_text <- paste0("<strong>Mean change </strong> ", '(from ', input$years[1], ' to ', input$years[2], ') = ', val_display, lab_change)
-      } else {
-        richness_display_text <- "<strong>Change data not available for selected years.</strong>"
+        if (input$metric == "perc") {
+          lab_change <- " (%)"
+        }
+        if (input$metric == "lnrr") {
+          lab_change <- " (lnRR)"
+        }
+        if (input$metric == "diff") {
+          lab_change <- " (no. species)"
+        }
+        val_display <- ifelse(change_value > 0,
+                              paste0("+", round(change_value, 2)),
+                              round(change_value, 2))
+        richness_display_text <- paste0(
+          "<strong>Mean change </strong> ",
+          '(from ',
+          input$years[1],
+          ' to ',
+          input$years[2],
+          ') = ',
+          val_display,
+          lab_change
+        )
       }
       
-      # Plot graph only for "Species richness change" mode 
+      # Plot graph only for "Species richness change" mode
       # prepare data for plotting
       plot_data_long <- point_data_for_plot %>%
         dplyr::select(starts_with("S_pred_")) %>%
@@ -370,13 +456,20 @@ server <- function(input, output, session) {
           names_prefix = "S_pred_"
         ) %>%
         mutate(prediction_year = as.numeric(prediction_year_str)) %>%
-        filter(prediction_year >= input$years[1] & prediction_year <= input$years[2]) %>%
-        arrange(prediction_year) 
+        filter(prediction_year >= input$years[1] &
+                 prediction_year <= input$years[2]) %>%
+        arrange(prediction_year)
       
       if (nrow(plot_data_long) > 0) {
-        p <- ggplot(plot_data_long, aes(x = prediction_year, y = S_prediction)) +
+        span_yrs <- input$years[2]-input$years[1]
+        p <- ggplot(plot_data_long,
+                    aes(x = prediction_year, y = S_prediction)) +
           geom_line(color = "midnightblue") +
-          scale_x_continuous(breaks = pretty_breaks(n = 5))+
+          geom_point(data = plot_data_long %>% 
+                       filter(prediction_year==max(prediction_year) | 
+                              prediction_year==min(prediction_year)),
+                     size = 3, color = "midnightblue") +
+          scale_x_continuous(breaks = pretty_breaks(n = ifelse(span_yrs>= 5, 5, span_yrs))) +
           labs(
             title = paste0("Local trend (", clicked_habitat, ")"),
             x = "Year",
@@ -387,14 +480,20 @@ server <- function(input, output, session) {
             plot.title = element_text(size = 12, face = "bold"),
             axis.title = element_text(size = 12),
             axis.text = element_text(size = 12),
-            plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "cm")
+            plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "cm"),
+            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)
           )
         
         temp_file <- tempfile(fileext = ".png")
-        ggsave(temp_file, plot = p, width = 4, height = 3, units = "in", dpi = 150)
+        ggsave(temp_file, plot = p,
+          width = 4, height = 3,
+          units = "in", dpi = 150
+        )
         img_b64 <- base64encode(temp_file)
         unlink(temp_file)
-        graph_html <- paste0("<img src='data:image/png;base64,", img_b64, "' width='250px'><br>")
+        graph_html <- paste0("<img src='data:image/png;base64,",
+                             img_b64,
+                             "' width='250px'><br>")
       } else {
         graph_html <- "<strong>No trend data for the selected period to plot.</strong><br>"
       }
@@ -403,16 +502,24 @@ server <- function(input, output, session) {
       single_year_col <- paste0("S_pred_", input$single_year)
       if (single_year_col %in% names(point_data_for_plot)) {
         current_s_value <- point_data_for_plot[[single_year_col]]
-        richness_display_text <- paste0("<strong>Mean richness (", input$single_year, "):</strong> ", round(current_s_value, 2))
+        richness_display_text <- paste0(
+          "<strong>Mean richness (",
+          input$single_year,
+          "):</strong> ",
+          round(current_s_value, 2)
+        )
       } else {
-        richness_display_text <- paste0("<strong>Richness data not available for ", input$single_year, ".</strong>")
+        richness_display_text <- paste0("<strong>Richness data not available for ",
+                                        input$single_year,
+                                        ".</strong>")
       }
     }
     
     # get the popup content
     popup_content <- paste0(
       richness_display_text,
-      "<br>Number of plots: ", n_plots_at_point,
+      "<br>Number of plots: ",
+      n_plots_at_point,
       "<br>",
       graph_html # empty if not in "Species richness change" mode
     )
@@ -420,7 +527,12 @@ server <- function(input, output, session) {
     # show the popup
     leafletProxy("map") %>%
       clearPopups() %>%
-      addPopups(lat = click$lat, lng = click$lng, popup = popup_content, layerId = click$id)
+      addPopups(
+        lat = click$lat,
+        lng = click$lng,
+        popup = popup_content,
+        layerId = click$id
+      )
   })
   
 }
