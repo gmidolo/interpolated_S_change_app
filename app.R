@@ -29,6 +29,7 @@ dat <- read_rds('data.rds')
 
 ui <- fluidPage(
   titlePanel(
+    title = 'Geographic patterns of alpha diversity change in European plant communities', ## Added tab title, feel free to change the title to your liking
     tags$h3('Geographic patterns of alpha diversity change in European plant communities from 1960 to 2020',
             style = 'font-size: 24px; font-weight: bold; color: #333;')
   ),
