@@ -29,9 +29,9 @@ dat <- read_rds('data.rds')
 
 ui <- fluidPage(
   titlePanel(
-    title = 'Species richness change in European plant communities',
-    tags$h3('Geographic patterns of alpha diversity change in European plant communities from 1960 to 2020',
-            style = 'font-size: 24px; font-weight: bold; color: #333;')
+    title = tags$h3('Geographic patterns of alpha diversity change in European plant communities from 1960 to 2020',
+                    style = 'font-size: 24px; font-weight: bold; color: #333;'),
+    windowTitle = 'Species richness change in European plant communities'
   ),
   sidebarLayout(
     sidebarPanel(

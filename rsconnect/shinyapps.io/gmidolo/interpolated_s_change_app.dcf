@@ -5,6 +5,8 @@ account: gmidolo
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 15104363
-bundleId: 10700582
+bundleId: 10835869
 url: https://gmidolo.shinyapps.io/interpolated_s_change_app/
 version: 1
+asMultiple: FALSE
+asStatic: FALSE
