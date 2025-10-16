@@ -42,7 +42,7 @@ ui <- fluidPage(
           p(HTML("Predictions of species richness estimates from individual plots were aggregated onto a 10 km &times; 10 km grid. On the map, point size represents the number of plots within each grid cell. Areas with denser sampling in space and time are more likely to show more accurate trends.")),
           p(HTML('This application uses data and code deposited at:<br>
                   - <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="15" style="vertical-align: middle; margin-right: 3px;"/> <a href="https://github.com/gmidolo/interpolated_S_change" target="_blank">github.com/gmidolo/interpolated_S_change</a><br>
-                  - <img src="https://about.zenodo.org/static/img/icons/zenodo-icon-blue.svg" width="15" style="vertical-align: middle; margin-right: 3px;"/> <a href="https://doi.org/10.5281/zenodo.15836616" target="_blank">10.5281/zenodo.15836616</a>'))
+                  - <img src="https://about.zenodo.org/static/img/icons/zenodo-icon-blue.svg" width="15" style="vertical-align: middle; margin-right: 3px;"/> <a href="https://doi.org/10.5281/zenodo.17357776" target="_blank">10.5281/zenodo.17357776</a>'))
       ),
       
       selectInput('mode', 'Mapping mode:',

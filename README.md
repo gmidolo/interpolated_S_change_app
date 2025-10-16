@@ -12,7 +12,7 @@ Predictions of species richness from individual plots were aggregated onto a 10 
 
 This application uses original data and code deposited at:<br>
                  - <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="15" style="vertical-align: middle; margin-right: 3px;"/> <a href="https://github.com/gmidolo/interpolated_S_change" target="_blank">github.com/gmidolo/interpolated_S_change</a><br>
-                 - <img src="https://about.zenodo.org/static/img/icons/zenodo-icon-white.svg" width="15" style="vertical-align: middle; margin-right: 3px;"/> <a href="https://doi.org/10.5281/zenodo.15836616" target="_blank">10.5281/zenodo.15836616</a>
+                 - <img src="https://about.zenodo.org/static/img/icons/zenodo-icon-white.svg" width="15" style="vertical-align: middle; margin-right: 3px;"/> <a href="https://doi.org/10.5281/zenodo.17357776" target="_blank">10.5281/zenodo.17357776</a>
 
 #### Author:
 <strong>Gabriele Midolo</strong><a href="https://orcid.org/0000-0003-1316-2546" target="_blank" style="margin-left: 5px;"><img src="https://upload.wikimedia.org/wikipedia/commons/0/06/ORCID_iD.svg" width="15" style="vertical-align: middle;"/></a> (<a href="mailto:midolo@fzp.czu.cz">midolo@fzp.czu.cz</a>) <br> Department of Spatial Sciences, Faculty of Environmental Sciences, Czech University of Life Sciences Prague, Kamýcká 129, 165 00, Praha - Suchdol, Czech Republic
